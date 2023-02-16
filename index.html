@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./heart.svg" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
+    <link rel="stylesheet" href="//at.alicdn.com/t/c/font_3663710_f1grrsidk8.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>For Icy</title>
+
+    <script type="module" crossorigin src="./assets/index-ba4a308e.js"></script>
+    <link rel="stylesheet" href="./assets/index-7ca2c617.css">
+  </head>
+  <body>
+    <div id="app"></div>
+    
+    <!-- 樱花特效 -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/Fuukei/Public_Repository@latest/static/js/sakura-less.js"></script>
+    
+    <!-- BGM -->
+    <audio id="bgm" src="./1.mp3" autoplay="autoplay" loop="loop" preload="preload"></audio>
+    <i class="iconfont icon-yinle1" onClick="play1()" style="color:#e6695b;position: absolute; top: 20px; right: 30px;font-size: 25px;cursor: pointer;"></i>
+
+    <script type="text/javascript">
+      // window.onload = function(){ 
+      // var audio = document.getElementById('bgm');
+      //    audio.play();
+      // }
+      function play1() {
+          var audio = document.getElementById('bgm');
+          if (audio.paused) {
+              audio.play();
+          }else{
+              audio.pause();
+          }
+      }
+
+    </script>
+    
+    <!-- <script type="text/javascript">
+      var os = function () {
+          var ua = navigator.userAgent,
+          isWindowsPhone = /(?:Windows Phone)/.test(ua),
+          isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,
+          isAndroid = /(?:Android)/.test(ua),
+          isFireFox = /(?:Firefox)/.test(ua),
+          isChrome = /(?:Chrome|CriOS)/.test(ua),
+          isTablet = /(?:iPad|PlayBook)/.test(ua) || (isAndroid &&       !/(?:Mobile)/.test(ua)) || (isFireFox && /(?:Tablet)/.test(ua)),
+          isPhone = /(?:iPhone)/.test(ua) && !isTablet,
+          isPc = !isPhone && !isAndroid && !isSymbian;
+          
+          return {
+                 isTablet: isTablet,
+                 isPhone: isPhone,
+                 isAndroid: isAndroid,
+                 isPc: isPc
+          };
+      }();
+   
+      // pc时加载一套页面
+      if(os.isPc){
+         location.replace("http://www.tencent.com/"); 
+      }
+          
+      // 移动端时加载另外一套页面 
+      if (os.isAndroid || os.isPhone) { 
+         location.replace('http://www.baidu.com/');
+      } else if (os.isTablet) {
+         location.replace('http://www.tencent.com/');
+      }
+   </script> -->
+</script>  
+  </body>
+</html>
