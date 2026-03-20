@@ -1,20 +1,37 @@
 <template>
   <div class="time-counter">
     <!-- title -->
-    <div class="title">感谢冰洁陪灿宇一起走过的</div>
+    <div class="title">这是冰洁陪灿宇一起走过的</div>
 
-    <!-- 计时 -->
-    <div class="timer">
-      <div v-for="(param, name) in count_time">
-        <div class="title">{{ param }}</div>
-        <div class="font1">{{ name }}</div>
+    <!-- 上面：年月日 -->
+    <div class="timer timer-top">
+      <div>
+        <div class="title">{{ count_time.Years }}</div>
+        <div class="font1">Years</div>
       </div>
+      <div>
+        <div class="title">{{ count_time.Months }}</div>
+        <div class="font1">Months</div>
+      </div>
+      <div>
+        <div class="title">{{ count_time.Days }}</div>
+        <div class="font1">Days</div>
+      </div>
+      <div>
+        <div class="title">{{ count_time.Hours }}</div>
+        <div class="font1">Hours</div>
+      </div>
+    </div>
+
+    <!-- 下面：天时分秒（一行格式） -->
+    <div class="timer-bottom-line">
+      {{ total_days }} 天 {{ count_time.Hours }} 时 {{ count_time.Minutes }} 分 {{ count_time.Seconds }} 秒
     </div>
 
     <!-- 导航 -->
     <p class="font2" style="text-align: center;">&emsp;&emsp;这是灿宇和冰洁的小站,<br>在这里记录了我们一起走过的时光</p>
     <div class="btn-group">
-      <div v-for="(page, index) in pages">
+      <div v-for="page in pages" :key="page.href">
         <n-button :color=page.color size="large" @click="GotoPage(page)">
           <p class="font2">{{ page.name }}</p>
         </n-button>
@@ -41,24 +58,56 @@ onMounted(() => {
 })
 
 let count_time = reactive({
+  Years: 0,
+  Months: 0,
   Days: 0,
   Hours: 0,
   Minutes: 0,
   Seconds: 0
 })
 
+let total_days = 0
+
 const timer = () => {
-  let time = setInterval(() => {
-    let start_time = '2019/06/21 17:00:00';
-    let now_time = new Date();
-    let date3 = now_time.getTime() - new Date(start_time).getTime();
-    count_time.Days = Math.floor(date3 / (24 * 3600 * 1000))
-    let leave1 = date3 % (24 * 3600 * 1000)    //计算天数后剩余的毫秒数
-    count_time.Hours = Math.floor(leave1 / (3600 * 1000))
-    let leave2 = leave1 % (3600 * 1000)        //计算小时数后剩余的毫秒数
-    count_time.Minutes = Math.floor(leave2 / (60 * 1000))
-    let leave3 = leave2 % (60 * 1000)      //计算分钟数后剩余的毫秒数
-    count_time.Seconds = Math.round(leave3 / 1000)
+  setInterval(() => {
+    const startDate = new Date('2019/06/21 17:00:00');
+    const nowDate = new Date();
+    
+    // 计算年数
+    let years = nowDate.getFullYear() - startDate.getFullYear();
+    let months = nowDate.getMonth() - startDate.getMonth();
+    let days = nowDate.getDate() - startDate.getDate();
+    
+    // 调整月份和年份
+    if (days < 0) {
+      months--;
+      const prevMonth = new Date(nowDate.getFullYear(), nowDate.getMonth(), 0);
+      days += prevMonth.getDate();
+    }
+    
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+    
+    count_time.Years = years;
+    count_time.Months = months;
+    count_time.Days = days;
+    
+    // 计算时分秒
+    const totalMs = nowDate.getTime() - startDate.getTime();
+    const dayMs = days * 24 * 3600 * 1000;
+    const remainMs = totalMs - dayMs - (months * 30.44 * 24 * 3600 * 1000) - (years * 365.25 * 24 * 3600 * 1000);
+    
+    let leave1 = remainMs % (24 * 3600 * 1000);
+    count_time.Hours = Math.floor(leave1 / (3600 * 1000));
+    let leave2 = leave1 % (3600 * 1000);
+    count_time.Minutes = Math.floor(leave2 / (60 * 1000));
+    let leave3 = leave2 % (60 * 1000);
+    count_time.Seconds = Math.round(leave3 / 1000);
+    
+    // 计算总天数
+    total_days = Math.floor(totalMs / (24 * 3600 * 1000));
   }, 1000)
 }
 
@@ -90,11 +139,50 @@ const GotoPage = (page) => {
   justify-content: center;
   text-align: center;
   flex-wrap: wrap;
-  margin-bottom: 30px;
 
   div {
     margin: 0.2em 0.7em;
   }
+}
+
+.timer-top {
+  margin-bottom: 15px;
+}
+
+.timer-bottom {
+  margin-bottom: 30px;
+}
+
+.timer-bottom-line {
+  color: #fff;
+  font-size: 1.2em;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 30px;
+  letter-spacing: 0.5px;
+}
+
+.title-small {
+  color: #fff;
+  font-size: 1.2em;
+  line-height: 1.2rem;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.total-days-info {
+  color: #fff;
+  font-size: 0.9em;
+  opacity: 0.7;
+  margin-bottom: 20px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.days-number {
+  font-weight: 600;
+  color: #E91E63;
+  font-size: 1.1em;
 }
 
 .title {
