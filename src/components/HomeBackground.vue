@@ -1,7 +1,7 @@
 <template>
   <div class="home-bg">
-    <img :src=url1 alt="" :style="{ opacity: opa1 }">
-    <img :src=url2 alt="" :style="{ opacity: opa2 }">
+    <img :src="urlBottom" alt="" class="layer-bottom">
+    <img ref="topEl" :src="urlTop" alt="" class="layer-top" :style="{ opacity: topOpacity }">
   </div>
 </template>
 
@@ -9,38 +9,41 @@
 import { onMounted, ref } from 'vue'
 import { backgroundImg } from '../common/data';
 
-onMounted(()=>{
+onMounted(() => {
   showBg()
 })
 
 let img_list = backgroundImg
+let currentIndex = 0
 
-// 索引值，透明度
-let url1 = ref('')
-let url2 = ref('')
-let index1 = ref(1)
-let index2 = ref(0)
-let opa1 = ref(1)
-let opa2 = ref(0)
+const urlTop = ref(img_list[0])
+const urlBottom = ref(img_list[1])
+const topOpacity = ref(1)
+const topEl = ref(null)
 
-// 轮播实现
 const showBg = () => {
-  let num = img_list.length
-  url1.value = img_list[0]
-  url2.value = img_list[1]
+  const num = img_list.length
 
-  // 图片效果，循环 + 渐入渐出
-  setInterval(()=>{
-    opa1.value = opa1.value ? 0 : 1
-    opa2.value = opa2.value === 0 ? 1 : 0
-    if(opa1.value === 1){
-      index1.value = (index1.value + 2) % num
-      url1.value = img_list[index1.value]
-    }
-    else{
-      index2.value = (index2.value + 2) % num
-      url2.value = img_list[index2.value]
-    }
+  setInterval(() => {
+    // 下层已经是下一张，让上层淡出，下层自然浮现
+    topOpacity.value = 0
+
+    // 淡出动画结束后，把上层换成再下一张并瞬间恢复不透明备用
+    setTimeout(() => {
+      currentIndex = (currentIndex + 1) % num
+      urlBottom.value = img_list[(currentIndex + 1) % num]
+      urlTop.value = img_list[currentIndex]
+      // 临时禁用 transition，避免恢复透明度时触发淡入动画
+      topEl.value.style.transition = 'none'
+      topOpacity.value = 1
+      // 下一帧再恢复 transition
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          topEl.value.style.transition = ''
+        })
+      })
+    }, 2000) // 与 transition 时长一致
+
   }, 6500)
 }
 </script>
@@ -64,8 +67,16 @@ const showBg = () => {
     height: 100%;
     object-fit: cover;
     vertical-align: bottom;
-    transition: all 2s linear;
-    filter: blur(2px); // 毛玻璃效果
+    filter: blur(1px);
+  }
+
+  .layer-bottom {
+    z-index: 1;
+  }
+
+  .layer-top {
+    z-index: 2;
+    transition: opacity 2s linear;
   }
 }
 </style>

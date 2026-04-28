@@ -1,7 +1,9 @@
 <template>
   <div class="time-counter">
     <!-- title -->
-    <div class="title">这是冰洁陪灿宇一起走过的</div>
+    <div class="title">
+      <span>这是冰洁和灿宇</span><span>一起走过的</span>
+    </div>
 
     <!-- 上面：年月日 -->
     <div class="timer timer-top">
@@ -20,6 +22,10 @@
       <div>
         <div class="title">{{ count_time.Hours }}</div>
         <div class="font1">Hours</div>
+      </div>
+      <div>
+        <div class="title">{{ count_time.Minutes }}</div>
+        <div class="font1">Minutes</div>
       </div>
     </div>
 
@@ -70,7 +76,7 @@ let total_days = 0
 
 const timer = () => {
   setInterval(() => {
-    const startDate = new Date('2019/06/21 17:00:00');
+    const startDate = new Date('2019/06/21 00:00:00');
     const nowDate = new Date();
     
     // 计算年数
@@ -93,21 +99,17 @@ const timer = () => {
     count_time.Years = years;
     count_time.Months = months;
     count_time.Days = days;
-    
-    // 计算时分秒
+
+    // 计算总毫秒，直接取模得到时分秒（不依赖近似值）
     const totalMs = nowDate.getTime() - startDate.getTime();
-    const dayMs = days * 24 * 3600 * 1000;
-    const remainMs = totalMs - dayMs - (months * 30.44 * 24 * 3600 * 1000) - (years * 365.25 * 24 * 3600 * 1000);
-    
-    let leave1 = remainMs % (24 * 3600 * 1000);
-    count_time.Hours = Math.floor(leave1 / (3600 * 1000));
-    let leave2 = leave1 % (3600 * 1000);
-    count_time.Minutes = Math.floor(leave2 / (60 * 1000));
-    let leave3 = leave2 % (60 * 1000);
-    count_time.Seconds = Math.round(leave3 / 1000);
-    
-    // 计算总天数
     total_days = Math.floor(totalMs / (24 * 3600 * 1000));
+
+    const remainMs = totalMs % (24 * 3600 * 1000);
+    count_time.Hours = Math.floor(remainMs / (3600 * 1000));
+    const leave2 = remainMs % (3600 * 1000);
+    count_time.Minutes = Math.floor(leave2 / (60 * 1000));
+    const leave3 = leave2 % (60 * 1000);
+    count_time.Seconds = Math.floor(leave3 / 1000);
   }, 1000)
 }
 
@@ -194,7 +196,9 @@ const GotoPage = (page) => {
   margin: 1em 0px;
   letter-spacing: 2px;
   margin-top: 5rem;
-
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 @media (max-width: 480px) {
