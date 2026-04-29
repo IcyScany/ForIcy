@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import { Plugin as importToCDN, autoComplete } from "vite-plugin-cdn-import";
+import { Plugin as importToCDN } from "vite-plugin-cdn-import";
 import path from 'path'
 
 export default defineConfig({
@@ -11,12 +11,12 @@ export default defineConfig({
         {
           name: "vue",
           var: "Vue",
-          path: "https://unpkg.com/vue@next",
+          path: "https://unpkg.com/vue@3.2.45/dist/vue.global.prod.js",
         },
         {
           name: "naive-ui",
           var: "NaiveUi",
-          path: "https://unpkg.com/naive-ui",
+          path: "https://unpkg.com/naive-ui@2.34.3/dist/index.prod.js",
         },
       ],
     }),
