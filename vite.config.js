@@ -22,7 +22,7 @@ export default defineConfig({
     }),
   ],
 
-  base: "./", //设置为相对路径
+  base: "/ForIcy/", //设置为相对路径
 
   publicDir: 'public',
 
